@@ -14,11 +14,13 @@ export interface IPreviewProduct extends IProductItem {
 	state: boolean;
 }
 
-//Интерфейс для каталога карточек
-export interface IProductList {
-	total: number;
-	items: IProductItem[];
-}
+// //Интерфейс для каталога карточек
+// export interface IProductList {
+// 	total: number;
+// 	items: IProductItem[];
+// 	getProductItem(id: string): void;
+// 	getProductList(items: IProductItem[]): void;
+// }
 
 //Интерфейс для продукта в корзине
 export interface IBasketProduct
@@ -43,9 +45,6 @@ export interface IOrderList {
 	total: number;
 	items: string[];
 }
-
-//Интерфейс для данных заказа
-export interface IOrderData extends IDelivery, IBuyerContacts, IOrderList {}
 
 //Интерфейс построения заказа
 export interface IOrderBuilder {
@@ -78,8 +77,18 @@ export interface IInputData {
 	value: string;
 }
 
+// Интерфейс для работы API, с помощью которого мы получаем список товаров, товар и можем оформить заказ
+export interface IWebLarekApi {
+	getProductList: () => Promise<IProductItem[]>;
+	getProductItem: (id: string) => Promise<IProductItem>;
+	postOrder(order: IOrderData): Promise<IOrderSuccess>;
+}
+
 //Тип для карточки каталога (исключая описание, через Omit)
 export type TProductCard = Omit<IProductItem, 'description'>;
 
 //Тип оплаты
-export type TPaymentMethod = 'online' | 'cash';
+export type TPaymentMethod = 'online' | 'upon receipt';
+
+//Тип для данных заказа
+export type IOrderData = IDelivery & IBuyerContacts & IOrderList;
