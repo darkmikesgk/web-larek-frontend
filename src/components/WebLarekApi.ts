@@ -1,0 +1,41 @@
+import { Api, ApiListResponse } from './base/api';
+import {
+	IWebLarekApi,
+	IProductItem,
+	IOrderData,
+	IOrderSuccess,
+} from '../types';
+
+export class WebLarekApi extends Api implements IWebLarekApi {
+	readonly cdn: string;
+
+	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
+		super(baseUrl, options);
+		this.cdn = cdn;
+	}
+
+	getProductList(): Promise<IProductItem[]> {
+		return this.get(`/product`).then(
+      (data: ApiListResponse<IProductItem>) =>
+			data.items.map((item) => ({
+				...item,
+				image: this.cdn + item.image,
+			}))
+		);
+	}
+
+	getProductItem(id: string): Promise<IProductItem> {
+		return this.get(`/product/${id}`).then(
+      (item: IProductItem) => ({
+			...item,
+			image: this.cdn + item.image,
+		})
+    );
+	}
+
+  orderProduct(order: IOrderData): Promise<IOrderSuccess> {
+    return this.post(`order`, order).then(
+      (data: IOrderSuccess) => data
+    );
+  }
+}

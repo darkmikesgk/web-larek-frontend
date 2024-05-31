@@ -77,11 +77,11 @@ export interface IInputData {
 	value: string;
 }
 
-// Интерфейс для работы API, с помощью которого мы получаем список товаров, товар и можем оформить заказ
+// Интерфейс для работы с API, с помощью которого мы получаем список товаров, товар и можем оформлять заказ
 export interface IWebLarekApi {
 	getProductList: () => Promise<IProductItem[]>;
 	getProductItem: (id: string) => Promise<IProductItem>;
-	postOrder(order: IOrderData): Promise<IOrderSuccess>;
+	orderProduct:(order: IOrderData) => Promise<IOrderSuccess>;
 }
 
 //Тип для карточки каталога (исключая описание, через Omit)
