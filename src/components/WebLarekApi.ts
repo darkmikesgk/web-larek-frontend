@@ -1,10 +1,17 @@
 import { Api, ApiListResponse } from './base/api';
 import {
-	IWebLarekApi,
+	//IWebLarekApi,
 	IProductItem,
 	IOrderData,
 	IOrderSuccess,
 } from '../types';
+
+// Интерфейс для работы с API, с помощью которого мы получаем список товаров, товар и можем оформлять заказ
+export interface IWebLarekApi {
+	getProductList: () => Promise<IProductItem[]>;
+	getProductItem: (id: string) => Promise<IProductItem>;
+	orderProduct:(order: IOrderData) => Promise<IOrderSuccess>;
+}
 
 export class WebLarekApi extends Api implements IWebLarekApi {
 	readonly cdn: string;
@@ -29,7 +36,7 @@ export class WebLarekApi extends Api implements IWebLarekApi {
       (item: IProductItem) => ({
 			...item,
 			image: this.cdn + item.image,
-		})
+			})
     );
 	}
 
