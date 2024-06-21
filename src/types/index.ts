@@ -5,7 +5,8 @@ export interface IProductItem {
 	image: string;
 	title: string;
 	category: string;
-	price: number | string;
+	price: number | null;
+	status: boolean;
 }
 
 //Интерфейс для предварительного просмотра карточки
@@ -31,7 +32,7 @@ export interface IBasketProduct
 //Интерфейс для информации о доставке
 export interface IDelivery {
 	payment: TPaymentMethod;
-	adress: string;
+	address: string;
 }
 
 //Интерфейс для контактных данных
@@ -84,6 +85,15 @@ export interface IInputData {
 // 	orderProduct:(order: IOrderData) => Promise<IOrderSuccess>;
 // }
 
+//тип данных бизнес логики
+export interface IAppState {
+  catalog: IProductItem[];
+  basket: string[];
+  preview: string | null;
+  order: IOrderBuilder | null;
+  loading: boolean;
+}
+
 //Тип для карточки каталога (исключая описание, через Omit)
 export type TProductCard = Omit<IProductItem, 'description'>;
 
@@ -92,3 +102,6 @@ export type TPaymentMethod = 'online' | 'upon receipt';
 
 //Тип для данных заказа
 export type IOrderData = IDelivery & IBuyerContacts & IOrderList;
+
+//Тип записи об ошибке в форме
+export type FormErrors = Partial<Record<keyof IOrderData, string>>;
