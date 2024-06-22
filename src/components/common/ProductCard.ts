@@ -1,6 +1,6 @@
 import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
-import { IBasketProduct } from '../../types';
+//import { IBasketProduct } from '../../types';
 //import { IEvents } from '../base/events';
 
 interface IProductCardActions {
@@ -27,9 +27,9 @@ export class ProductCard extends Component<IProductCard> {
 
 	private categoryItem: Record<string, string> = {
 		'софт-скил': '_soft',
-		другое: '_other',
-		дополнительное: '_additional',
-		кнопка: '_button',
+		'другое': '_other',
+		'дополнительное': '_additional',
+		'кнопка': '_button',
 		'хард-скилл': '_hard',
 	};
 
@@ -117,7 +117,12 @@ export class ProductCard extends Component<IProductCard> {
 	}
 }
 
-export class BasketProduct extends Component<IBasketProduct> {
+export interface ItemProductBasket {
+	title: string;
+	price: number;
+}
+
+export class BasketProduct extends Component<ItemProductBasket> {
 	protected _title: HTMLHeadingElement;
 	protected _price: HTMLSpanElement;
 	protected _index: HTMLSpanElement;
@@ -125,13 +130,13 @@ export class BasketProduct extends Component<IBasketProduct> {
 
 	constructor(
 		container: HTMLElement,
-		//index: number,
-		actions: IProductCardActions
+		index: number,
+		actions?: IProductCardActions
 	) {
 		super(container);
 
 		this._title = ensureElement<HTMLHeadingElement>(
-			`.basket__item-index`,
+			`.card__title`,
 			container
 		);
 		this._price = ensureElement<HTMLSpanElement>(`.card__price`, container);
@@ -139,11 +144,11 @@ export class BasketProduct extends Component<IBasketProduct> {
 			`.basket__item-index`,
 			container
 		);
-		//this.setText(this._index, index + 1);
+		this.setText(this._index, index + 1);
 		this._deleteButton = container.querySelector('.card__button');
-		this._deleteButton.addEventListener('click', (evt: MouseEvent) => {
-			evt.preventDefault();
-			actions.onClick?.(evt);
+		this._deleteButton.addEventListener('click', (event: MouseEvent) => {
+			event.preventDefault();
+			actions.onClick?.(event);
 			return false;
 		});
 	}
@@ -157,10 +162,10 @@ export class BasketProduct extends Component<IBasketProduct> {
 	}
 
 	set index(value: number) {
-		this.setText(this._index, value);
+		this.setText(this._index, value + 1);
 	}
 
-	render(data: IBasketProduct): HTMLElement {
+	render(data: ItemProductBasket): HTMLElement {
 		Object.assign(this as object, data ?? {});
 		return this.container;
 	}

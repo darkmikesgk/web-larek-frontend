@@ -3,16 +3,19 @@ import { ensureElement } from '../../utils/utils';
 import { Component } from '../base/Component';
 import { IEvents } from '../base/events';
 
+interface ISuccessActions {
+	onClick: () => void;
+}
+
 export class Success extends Component<IOrderSuccess> {
-	protected _description: HTMLParagraphElement;
+	protected _total: HTMLParagraphElement;
 	protected _closeButton: HTMLButtonElement;
 	protected events: IEvents;
 
-	constructor(container: HTMLElement, events: IEvents) {
+	constructor(container: HTMLElement, _total: number, actions: ISuccessActions) {
 		super(container);
 
-		this.events = events;
-		this._description = ensureElement<HTMLParagraphElement>(
+		this._total = ensureElement<HTMLParagraphElement>(
 			'.order-success__description',
 			this.container
 		);
@@ -20,12 +23,12 @@ export class Success extends Component<IOrderSuccess> {
 			'.order-success__close',
 			this.container
 		);
-		this._closeButton.addEventListener('click', () =>
-			this.events.emit('success:isSubmit')
-		);
+		if (actions.onClick) {
+			this._closeButton.addEventListener('click', actions.onClick);
+		}
 	}
 
   set totalPrice(value: number) {
-    this.setText(this._description, `Списано ${value} синапсов`);
+    this.setText(this._total, `Списано ${value} синапсов`);
   }
 }

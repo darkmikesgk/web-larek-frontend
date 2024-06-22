@@ -16,20 +16,33 @@ export class Basket extends Component<IBasketView> {
 	constructor(container: HTMLElement, events: IEvents) {
 		super(container);
 
+		// this._list = ensureElement<HTMLElement>('.basket__list', container);
+		// this._total = ensureElement<HTMLSpanElement>('.basket__price', container);
+		// this._button = ensureElement<HTMLButtonElement>(
+		// 	'.basket__button',
+		// 	container
+		// );
+		// this.events = events;
+
+		// if (this._button) {
+		// 	this._button.addEventListener('click', () => {
+		// 		events.emit('delivery:isOpen');
+		// 	});
+		// }
+		// this.items = [];
+
 		this._list = ensureElement<HTMLElement>('.basket__list', container);
-		this._total = ensureElement<HTMLSpanElement>('.basket__price', container);
-		this._button = ensureElement<HTMLButtonElement>(
-			'.basket__button',
-			container
-		);
+		this._total = this.container.querySelector('.basket__price');
+		this._button = this.container.querySelector('.basket__button');
+
 		this.events = events;
 
-		if (this._button) {
-			this._button.addEventListener('click', () => {
-				events.emit('delivery:isOpened');
-			});
-		}
-		this.items = [];
+		this._button.addEventListener('click', () => this.events.emit('delivery:isOpen'));
+		// if (this._button) {
+		// 	this._button.addEventListener('click', () => {
+		// 		events.emit('delivery:isOpen')
+		// 	})
+		// }
 	}
 
 	set items(items: HTMLElement[]) {

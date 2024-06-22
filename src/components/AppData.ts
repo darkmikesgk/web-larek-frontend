@@ -2,9 +2,9 @@ import {
 	FormErrors,
 	IAppState,
 	IBuyerContacts,
-	IOrderData,
+	TOrderData,
 	IProductItem,
-  TPaymentMethod,
+	TPaymentMethod,
 } from '../types';
 import { Model } from './base/Model';
 import { IEvents } from './base/events';
@@ -16,7 +16,7 @@ export class Product extends Model<IProductItem> implements IProductItem {
 	title: string;
 	category: string;
 	price: number | null;
-  status: boolean;
+	status: boolean;
 }
 
 export type ChangeInCatalogEvent = {
@@ -27,7 +27,7 @@ export class AppState extends Model<IAppState> {
 	catalog: IProductItem[];
 	basket: IProductItem[];
 	preview: string | null;
-	order: IOrderData;
+	order: TOrderData;
 	loading: boolean;
 	formErrors: FormErrors = {};
 
@@ -55,80 +55,80 @@ export class AppState extends Model<IAppState> {
 		this.emitChanges('basket:isChanged');
 	}
 
-  //Удалить товар
-  deleteProduct(id: string): void {
-    this.basket = this.basket.filter((item) => item.id !== id);
-    this.emitChanges('basket:isChanged');
-  }
+	//Удалить товар
+	deleteProduct(id: string): void {
+		this.basket = this.basket.filter((item) => item.id !== id);
+		this.emitChanges('basket:isChanged');
+	}
 
-  setPaymentMethod(method: string): void {
-    this.order.payment = method as TPaymentMethod;
-    this.validateDelivery();
-  }
+	setPaymentMethod(method: string): void {
+		this.order.payment = method as TPaymentMethod;
+		this.validateDelivery();
+	}
 
-  setAddress(value: string): void {
-    this.order.address = value;
-    this.validateDelivery();
-  }
+	setAddress(value: string): void {
+		this.order.address = value;
+		this.validateDelivery();
+	}
 
-  //перепроверить
-  setContactField(field: keyof Partial<IBuyerContacts>, value: string): void {
-    this.order[field] = value;
-    this.validateDelivery();
-  }
+	//перепроверить
+	setContactField(field: keyof Partial<IBuyerContacts>, value: string): void {
+		this.order[field] = value;
+		this.validateDelivery();
+	}
 
-  setCatalog(items: IProductItem[]):void {
-    this.catalog = items.map((item) => new Product(item, this.events));
-    this.emitChanges('catalog:isChanged', { catalog: this.catalog });
-  }
+	setCatalog(items: IProductItem[]): void {
+		this.catalog = items.map((item) => new Product(item, this.events));
+		this.emitChanges('catalog:isChanged', { catalog: this.catalog });
+	}
 
-  getOrderedProducts(): IProductItem[] {
-    return this.basket;
-  }
+	getOrderedProducts(): IProductItem[] {
+		return this.basket;
+	}
 
-  orderStatus(item: IProductItem): boolean {
-    return this.basket.includes(item);
-  }
+	orderStatus(item: IProductItem): boolean {
+		return this.basket.includes(item);
+	}
 
-  //Очистить корзину
-  clearBasket():void {
-    this.basket = [];
-    this.resetOrder();
-    this.emitChanges('basket:isChanged');
-  }
+	//Очистить корзину
+	clearBasket(): void {
+		this.basket = [];
+		this.resetOrder();
+		this.emitChanges('basket:isChanged');
+	}
 
-  getTotal(): number {
-    return this.basket.reduce((total, item) => total + item.price, 0)
-  }
+	getTotal(): number {
+		return this.basket.reduce((total, item) => total + item.price, 0);
+	}
 
-  orderSuccess(): void {
-    this.order.total = this.getTotal();
-    this.order.items = this.getOrderedProducts().map((item) => item.id);
-  }
+	orderSuccess(): void {
+		this.order.total = this.getTotal();
+		this.order.items = this.getOrderedProducts().map((item) => item.id);
+	}
 
-  validateDelivery(): void {
-    const errors: typeof this.formErrors = {};
+	validateDelivery(): void {
+		const errors: typeof this.formErrors = {};
 
-    if (!this.order.payment) {
-      errors.payment = "Укажите способ оплаты";
-    }
-    if (!this.order.address) {
-      this.order.address = "Укажите адрес доставки";
-    }
-    this.formErrors = errors;
-    this.events.emit('formDeliveryErrors:isChanged', this.formErrors);
-  }
+		if (!this.order.payment) {
+			errors.payment = 'Укажите способ оплаты';
+		}
+		if (!this.order.address) {
+			errors.address = 'Укажите адрес доставки';
+		}
+		this.formErrors = errors;
+		this.events.emit('formDeliveryErrors:isChanged', this.formErrors);
+	}
 
-  validateBuyerContacts(): void {
-    const errors: typeof this.formErrors = {};
+	validateBuyerContacts(): void {
+		const errors: typeof this.formErrors = {};
 
-    if (!this.order.email) {
-      errors.email = "Укажите email"
-    }
-    if (!this.order.phone) {
-      errors.phone = "Укажите номер телефона";
-    }
-    this.formErrors = errors;
-    this.events.emit('formBuyerContactsErrors:isChanged', this.formErrors);
-  }
+		if (!this.order.email) {
+			errors.email = 'Укажите email';
+		}
+		if (!this.order.phone) {
+			errors.phone = 'Укажите номер телефона';
+		}
+		this.formErrors = errors;
+		this.events.emit('formBuyerContactsErrors:isChanged', this.formErrors);
+	}
 }

@@ -32,7 +32,7 @@ export class DeliveryForm extends Form<IDelivery> {
 
 	setPaymentMethod(className: string): void {
 		[this._online, this._uponReceipt].forEach((btn) => {
-			btn.classList.toggle('.button_alt-active', btn.name === className);
+			btn.classList.toggle('button_alt-active', btn.name === className);
 		});
 	}
 

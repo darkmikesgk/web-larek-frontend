@@ -1,8 +1,7 @@
 import { Api, ApiListResponse } from './base/api';
 import {
-	//IWebLarekApi,
 	IProductItem,
-	IOrderData,
+	TOrderData,
 	IOrderSuccess,
 } from '../types';
 
@@ -10,7 +9,7 @@ import {
 export interface IWebLarekApi {
 	getProductList: () => Promise<IProductItem[]>;
 	getProductItem: (id: string) => Promise<IProductItem>;
-	orderProduct:(order: IOrderData) => Promise<IOrderSuccess>;
+	orderProduct:(order: TOrderData) => Promise<IOrderSuccess>;
 }
 
 export class WebLarekApi extends Api implements IWebLarekApi {
@@ -40,7 +39,7 @@ export class WebLarekApi extends Api implements IWebLarekApi {
     );
 	}
 
-  orderProduct(order: IOrderData): Promise<IOrderSuccess> {
+  orderProduct(order: TOrderData): Promise<IOrderSuccess> {
     return this.post(`order`, order).then(
       (data: IOrderSuccess) => data
     );

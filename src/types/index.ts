@@ -24,10 +24,10 @@ export interface IPreviewProduct extends IProductItem {
 // }
 
 //Интерфейс для продукта в корзине
-export interface IBasketProduct
-	extends Omit<IProductItem, 'description' | 'image' | 'category'> {
-	index: number;
-}
+// export interface IBasketProduct
+// 	extends Omit<IProductItem, 'description' | 'image' | 'category'> {
+// 	index?: number;
+// }
 
 //Интерфейс для информации о доставке
 export interface IDelivery {
@@ -52,7 +52,7 @@ export interface IOrderBuilder {
 	delivery: IDelivery;
 	contacts: IBuyerContacts;
 	orderList: IOrderList;
-	result: IOrderData;
+	result: TOrderData;
 }
 
 // Интерфейс успешного заказа
@@ -101,7 +101,7 @@ export type TProductCard = Omit<IProductItem, 'description'>;
 export type TPaymentMethod = 'online' | 'upon receipt';
 
 //Тип для данных заказа
-export type IOrderData = IDelivery & IBuyerContacts & IOrderList;
+export type TOrderData = IDelivery & IBuyerContacts & IOrderList;
 
 //Тип записи об ошибке в форме
-export type FormErrors = Partial<Record<keyof IOrderData, string>>;
+export type FormErrors = Partial<Record<keyof TOrderData, string>>;
