@@ -43,6 +43,7 @@ export class Basket extends Component<IBasketView> {
 		// 		events.emit('delivery:isOpen')
 		// 	})
 		// }
+		this.items = [];
 	}
 
 	set items(items: HTMLElement[]) {

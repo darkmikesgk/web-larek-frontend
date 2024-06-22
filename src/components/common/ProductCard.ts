@@ -1,5 +1,6 @@
 import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
+
 //import { IBasketProduct } from '../../types';
 //import { IEvents } from '../base/events';
 
@@ -114,6 +115,10 @@ export class ProductCard extends Component<IProductCard> {
 
 	set price(value: number) {
 		this.setText(this._price, value ? `${value} синапсов` : 'Бесценно');
+	}
+
+	set button(value: string) {
+		this.setText(this._button, value);
 	}
 }
 

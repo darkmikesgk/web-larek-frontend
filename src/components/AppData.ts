@@ -74,7 +74,7 @@ export class AppState extends Model<IAppState> {
 	//перепроверить
 	setContactField(field: keyof Partial<IBuyerContacts>, value: string): void {
 		this.order[field] = value;
-		this.validateDelivery();
+		this.validateBuyerContacts();
 	}
 
 	setCatalog(items: IProductItem[]): void {

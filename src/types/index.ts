@@ -48,12 +48,12 @@ export interface IOrderList {
 }
 
 //Интерфейс построения заказа
-export interface IOrderBuilder {
-	delivery: IDelivery;
-	contacts: IBuyerContacts;
-	orderList: IOrderList;
-	result: TOrderData;
-}
+// export interface IOrderBuilder {
+// 	delivery: IDelivery;
+// 	contacts: IBuyerContacts;
+// 	orderList: IOrderList;
+// 	result: TOrderData;
+// }
 
 // Интерфейс успешного заказа
 export interface IOrderSuccess {
@@ -90,7 +90,7 @@ export interface IAppState {
   catalog: IProductItem[];
   basket: string[];
   preview: string | null;
-  order: IOrderBuilder | null;
+  //order: IOrderBuilder | null;
   loading: boolean;
 }
 

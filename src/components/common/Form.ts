@@ -12,7 +12,7 @@ export class Form<T> extends Component<IFormState> {
 		super(container);
 
 		this._submit = ensureElement<HTMLButtonElement>(
-			'.button[type=submit]',
+			'button[type=submit]',
 			this.container
 		);
 		this._errors = ensureElement<HTMLSpanElement>(
@@ -38,7 +38,8 @@ export class Form<T> extends Component<IFormState> {
 		this.events.emit(`${this.container.name}.${String(field)}:isChanged`, {
 			field,
 			value,
-		});
+		}
+	);
 	}
 
   //проверить

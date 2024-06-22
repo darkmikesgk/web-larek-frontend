@@ -25,7 +25,7 @@ const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
 const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const deliveryTemplate = ensureElement<HTMLTemplateElement>('#order');
-const BuyerContactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
+const buyerContactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 const appData = new AppState({}, events);
@@ -36,8 +36,8 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
 
 const deliveryForm = new DeliveryForm(cloneTemplate(deliveryTemplate), events);
-const buyerContactForm = new BuyerContactsForm(
-	cloneTemplate(BuyerContactsTemplate),
+const buyerContactsForm = new BuyerContactsForm(
+	cloneTemplate(buyerContactsTemplate),
 	events
 );
 
@@ -93,7 +93,8 @@ events.on('order:isSubmit', () => {
 //Изменения в состоянии валидации формы контактов
 events.on('formBuyerContactsErrors:isChanged', (errors: Partial<IBuyerContacts>) => {
 	const { email, phone } = errors;
-	buyerContactForm.errors = Object.values({ phone, email })
+	buyerContactsForm.valid = !email && !phone;
+	buyerContactsForm.errors = Object.values({ phone, email })
 		.filter((i) => !!i)
 		.join('; ');
 });
@@ -114,7 +115,7 @@ events.on(
 //открыть форму контактов
 events.on('contacts:isOpen', () => {
 	modal.render({
-		content: buyerContactForm.render({
+		content: buyerContactsForm.render({
 			phone: '',
 			email: '',
 			valid: false,
@@ -124,7 +125,7 @@ events.on('contacts:isOpen', () => {
 });
 
 //отправка формы заказа
-events.on('contact:submit', () => {
+events.on('contacts:isSubmit', () => {
 	appData.orderSuccess();
 
 	api.orderProduct(appData.order)
@@ -210,9 +211,7 @@ events.on('preview:isChanged', (item: ProductCard) => {
 						},
 					}
 				);
-				const buttonText: string = appData.orderStatus(item)
-					? 'Убрать'
-					: 'Купить';
+				const buttonText: string = appData.orderStatus(item) ? 'Убрать' : 'В корзину';
 
 				modal.render({
 					content: card.render({
