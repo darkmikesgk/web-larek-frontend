@@ -1,7 +1,7 @@
-import { Component } from './base/Component';
-import { ensureElement } from '../utils/utils';
-import { IBasketProduct, IProductItem } from '../types';
-import { IEvents } from './base/events';
+import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
+import { IBasketProduct } from '../../types';
+//import { IEvents } from '../base/events';
 
 interface IProductCardActions {
 	onClick: (event: MouseEvent) => void;
@@ -12,52 +12,51 @@ export interface IProductCard {
 	image: string;
 	title: string;
 	category: string;
-	price: number | string;
+	price: number;
 	button?: string;
+	status: boolean;
 }
 
 export class ProductCard extends Component<IProductCard> {
-	protected _description?: HTMLElement;
+	protected _description?: HTMLParagraphElement;
 	protected _image?: HTMLImageElement;
-	protected _title: HTMLElement;
-	protected _category: HTMLElement;
-	protected _price: HTMLButtonElement;
+	protected _title: HTMLHeadingElement;
+	protected _category: HTMLSpanElement;
+	protected _price: HTMLSpanElement;
 	protected _button?: HTMLButtonElement;
 
-	// private categoryItem: Map<string, string> = new Map([
-	// 	['софт-скил', 'card__category_soft'],
-	// 	['другое', 'card__category_other'],
-	// 	['дополнительное', 'card__category_additional'],
-	// 	['кнопка', 'card__category_button'],
-	// 	['хард-скилл', 'card__category_hard'],
-	// ]);
-
 	private categoryItem: Record<string, string> = {
-		'софт-скил': 'card__category_soft',
-		другое: 'card__category_other',
-		дополнительное: 'card__category_additional',
-		кнопка: 'card__category_button',
-		'хард-скилл': 'card__category_hard',
+		'софт-скил': '_soft',
+		другое: '_other',
+		дополнительное: '_additional',
+		кнопка: '_button',
+		'хард-скилл': '_hard',
 	};
 
 	constructor(
-		blockName: string,
+		protected blockName: string,
 		container: HTMLElement,
 		actions: IProductCardActions
 	) {
 		super(container);
 
-		this._description = container.querySelector(`.${blockName}__description`);
+		this._description = container.querySelector(`.${blockName}__text`);
 		this._image = ensureElement<HTMLImageElement>(
 			`.${blockName}__image`,
 			container
 		);
-		this._title = ensureElement<HTMLElement>(`.${blockName}__title`, container);
-		this._category = ensureElement<HTMLElement>(
+		this._title = ensureElement<HTMLHeadingElement>(
+			`.${blockName}__title`,
+			container
+		);
+		this._category = ensureElement<HTMLSpanElement>(
 			`.${blockName}__category`,
 			container
 		);
-		this._price = container.querySelector(`.${blockName}__price`);
+		this._price = ensureElement<HTMLSpanElement>(
+			`.${blockName}__price`,
+			container
+		);
 		this._button = container.querySelector(`.${blockName}__button`);
 
 		if (actions?.onClick) {
@@ -101,6 +100,7 @@ export class ProductCard extends Component<IProductCard> {
 		this.setText(this._category, value);
 	}
 
+	//проверить
 	protected toggleCategory(value: string) {
 		if (value in this.categoryItem) {
 			const changeClass = this.categoryItem[value];
@@ -108,13 +108,12 @@ export class ProductCard extends Component<IProductCard> {
 		}
 	}
 
-	get price(): string {
-		return this._price.textContent || '';
+	get price(): number {
+		return Number(this._price.textContent) || 0;
 	}
 
-	set price(value: string) {
-		const priceItem = value ? `${value} синапсов` : `Бесценно`;
-		this.setText(this._price, priceItem);
+	set price(value: number) {
+		this.setText(this._price, value ? `${value} синапсов` : 'Бесценно');
 	}
 }
 
@@ -122,11 +121,11 @@ export class BasketProduct extends Component<IBasketProduct> {
 	protected _title: HTMLHeadingElement;
 	protected _price: HTMLSpanElement;
 	protected _index: HTMLSpanElement;
-	protected _deleteButton: HTMLElement;
+	protected _deleteButton: HTMLButtonElement;
 
 	constructor(
 		container: HTMLElement,
-		index: number,
+		//index: number,
 		actions: IProductCardActions
 	) {
 		super(container);
@@ -149,21 +148,20 @@ export class BasketProduct extends Component<IBasketProduct> {
 		});
 	}
 
-  set title(value: string) {
-    this.setText(this._title, value);
-  }
-
-	set price(value: string) {
-		const priceItem = value ? `${value} синапсов` : `Бесценно`;
-		this.setText(this._price, priceItem);
+	set title(value: string) {
+		this.setText(this._title, value);
 	}
 
-  set index(value: number) {
-    this.setText(this._index, value);
-  }
+	set price(value: number) {
+		this.setText(this._price, value ? `${value} синапсов` : 'Бесценно');
+	}
 
-  render(data: IBasketProduct): HTMLElement {
-    Object.assign(this as object, data ?? {});
-    return this.container;
-  }
+	set index(value: number) {
+		this.setText(this._index, value);
+	}
+
+	render(data: IBasketProduct): HTMLElement {
+		Object.assign(this as object, data ?? {});
+		return this.container;
+	}
 }

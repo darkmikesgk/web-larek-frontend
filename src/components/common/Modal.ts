@@ -11,23 +11,17 @@ export class Modal extends Component<IModalData> {
 	protected _content: HTMLElement;
 	protected events: IEvents;
 
-	constructor(conteiner: HTMLElement, protected evt: IEvents) {
+	constructor(conteiner: HTMLElement, events: IEvents) {
 		super(conteiner);
 
-		this.events = evt;
+		this.events = events;
 		this._closeButton = ensureElement<HTMLButtonElement>(
 			'.modal__close',
 			conteiner
 		);
-		this._content = ensureElement<HTMLElement>('.modal__content', conteiner);
+		this._content = ensureElement<HTMLDivElement>('.modal__content', conteiner);
 
-		this.container.addEventListener('click', (evt: MouseEvent) => {
-			const target = evt.target as HTMLElement;
-			if (target.classList.contains('modal')) {
-				this.close();
-			}
-		});
-		//this.container.addEventListener('click', this.close.bind(this));
+		this.container.addEventListener('click', this.close.bind(this));
 		this._closeButton.addEventListener('click', this.close.bind(this));
 		this._content.addEventListener('click', (evt) => evt.stopPropagation());
 	}

@@ -11,16 +11,16 @@ interface IPage {
 export class Page extends Component<IPage> {
 	protected _catalog: HTMLElement;
 	protected _basket: HTMLElement;
-	protected _basketCounter: HTMLElement;
-	protected _wrapper: HTMLElement;
+	protected _basketCounter: HTMLSpanElement;
+	protected _wrapper: HTMLDivElement;
 
 	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
 
-		this._catalog = ensureElement<HTMLElement>('.catalog__items');
+		this._catalog = ensureElement<HTMLElement>('.gallery');
 		this._basket = ensureElement<HTMLElement>('.header__basket');
-		this._basketCounter = ensureElement<HTMLElement>('.header__basket-counter');
-		this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
+		this._basketCounter = ensureElement<HTMLSpanElement>('.header__basket-counter');
+		this._wrapper = ensureElement<HTMLDivElement>('.page__wrapper');
 
 		this._basket.addEventListener('click', () => {
 			this.events.emit('basket:isOpen');
@@ -37,9 +37,9 @@ export class Page extends Component<IPage> {
 
 	set locked(value: boolean) {
 		if (value) {
-			this._wrapper.classList.add('.page__wrapper_locked');
+			this._wrapper.classList.add('page__wrapper_locked');
 		} else {
-			this._wrapper.classList.remove('.page__wrapper_locked');
+			this._wrapper.classList.remove('page__wrapper_locked');
 		}
 	}
 }

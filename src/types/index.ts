@@ -6,7 +6,7 @@ export interface IProductItem {
 	title: string;
 	category: string;
 	price: number | null;
-	status: boolean;
+	//status: boolean;
 }
 
 //Интерфейс для предварительного просмотра карточки
@@ -57,14 +57,14 @@ export interface IOrderBuilder {
 
 // Интерфейс успешного заказа
 export interface IOrderSuccess {
-	id: string;
+//	id: string;
 	total: number;
 }
 
 // Интерфейс для состояния формы
 export interface IFormState {
 	valid: boolean;
-	error: string;
+	errors: string[];
 }
 
 // Интерфейс для формы
