@@ -1,11 +1,12 @@
+import { IBasketView } from '../../types';
 import { createElement, ensureElement } from '../../utils/utils';
 import { Component } from '../base/Component';
 import { IEvents } from '../base/events';
 
-interface IBasketView {
-	items: HTMLElement[];
-	total: number;
-}
+// interface IBasketView {
+// 	items: HTMLElement[];
+// 	total: number;
+// }
 
 export class Basket extends Component<IBasketView> {
 	protected _list: HTMLElement;
@@ -16,33 +17,11 @@ export class Basket extends Component<IBasketView> {
 	constructor(container: HTMLElement, events: IEvents) {
 		super(container);
 
-		// this._list = ensureElement<HTMLElement>('.basket__list', container);
-		// this._total = ensureElement<HTMLSpanElement>('.basket__price', container);
-		// this._button = ensureElement<HTMLButtonElement>(
-		// 	'.basket__button',
-		// 	container
-		// );
-		// this.events = events;
-
-		// if (this._button) {
-		// 	this._button.addEventListener('click', () => {
-		// 		events.emit('delivery:isOpen');
-		// 	});
-		// }
-		// this.items = [];
-
+		this.events = events;
 		this._list = ensureElement<HTMLElement>('.basket__list', container);
 		this._total = this.container.querySelector('.basket__price');
 		this._button = this.container.querySelector('.basket__button');
-
-		this.events = events;
-
 		this._button.addEventListener('click', () => this.events.emit('delivery:isOpen'));
-		// if (this._button) {
-		// 	this._button.addEventListener('click', () => {
-		// 		events.emit('delivery:isOpen')
-		// 	})
-		// }
 		this.items = [];
 	}
 

@@ -8,7 +8,7 @@ import { Page } from './components/Page';
 import { Modal } from './components/common/Modal';
 import { Basket } from './components/common/Basket';
 import { BuyerContactsForm, DeliveryForm } from './components/OrderForms';
-import { ChangeInCatalogEvent } from './components/AppData';
+import { CatalogChangesEvents } from './components/AppData';
 import { BasketProduct, ProductCard } from './components/common/ProductCard';
 import { IBuyerContacts, IDelivery } from './types';
 import { Success } from './components/common/Success';
@@ -42,7 +42,7 @@ const buyerContactsForm = new BuyerContactsForm(
 );
 
 //Изменения в элементах каталога
-events.on<ChangeInCatalogEvent>('catalog:isChanged', () => {
+events.on<CatalogChangesEvents>('catalog:isChanged', () => {
 	page.catalog = appData.catalog.map((item) => {
 		const card = new ProductCard('card', cloneTemplate(cardCatalogTemplate), {
 			onClick: () => events.emit('preview:isChanged', item),
@@ -69,7 +69,7 @@ events.on('formDeliveryErrors:isChanged', (errors: Partial<IDelivery>) => {
 //Открытие формы доставки
 events.on('delivery:isOpen', () => {
 	appData.setPaymentMethod('');
-	deliveryForm.setPaymentMethod('');
+	deliveryForm.setPaymentMethodClass('');
 	modal.render({
 		content: deliveryForm.render({
 			payment: null,
@@ -137,7 +137,7 @@ events.on('contacts:isSubmit', () => {
 				onClick: () => {
 					modal.close();
 					appData.clearBasket();
-					deliveryForm.setPaymentMethod('');
+					deliveryForm.setPaymentMethodClass('');
 					events.emit('basket:isChanged');
 				},
 			}
@@ -145,6 +145,8 @@ events.on('contacts:isSubmit', () => {
 		modal.render({
 			content: success.render({}),
 		});
+		appData.clearBasket();
+		deliveryForm.setPaymentMethodClass('');
 	})
 	.catch((err) => {
 		console.error(err);
@@ -202,16 +204,21 @@ events.on('preview:isChanged', (item: ProductCard) => {
 					cloneTemplate(cardPreviewTemplate),
 					{
 						onClick: () => {
-							if (appData.orderStatus(item)) {
-								appData.deleteProduct(item.id);
-								modal.close();
+							if (item.price) {
+								if (appData.orderStatus(item)) {
+									appData.deleteProduct(item.id);
+									modal.close();
+								} else {
+									events.emit('product:isAdded', item);
+								} 
 							} else {
-								events.emit('product:isAdded', item);
+								//////////
 							}
 						},
 					}
 				);
-				const buttonText: string = appData.orderStatus(item) ? 'Убрать' : 'В корзину';
+				const buttonText = item.price ? (appData.orderStatus(item) ? 'Убрать' : 'В корзину') : 'Бесценно';
+				card.setDisabledNonPriceButton(!item.price);
 
 				modal.render({
 					content: card.render({

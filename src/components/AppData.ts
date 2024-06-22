@@ -19,7 +19,7 @@ export class Product extends Model<IProductItem> implements IProductItem {
 	status: boolean;
 }
 
-export type ChangeInCatalogEvent = {
+export type CatalogChangesEvents = {
 	catalog: Product[];
 };
 

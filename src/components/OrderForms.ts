@@ -24,13 +24,13 @@ export class DeliveryForm extends Form<IDelivery> {
 		this._paymentButtons.addEventListener('click', (evt: MouseEvent) => {
 			const target = evt.target as HTMLButtonElement;
 			if (target && target.classList.contains('button_alt')) {
-				this.setPaymentMethod(target.name);
+				this.setPaymentMethodClass(target.name);
 				events.emit('payment:isChanged', { target: target.name });
 			}
 		});
 	}
 
-	setPaymentMethod(className: string): void {
+	setPaymentMethodClass(className: string): void {
 		[this._online, this._uponReceipt].forEach((btn) => {
 			btn.classList.toggle('button_alt-active', btn.name === className);
 		});

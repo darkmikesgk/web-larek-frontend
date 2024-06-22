@@ -1,22 +1,6 @@
 import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
-
-//import { IBasketProduct } from '../../types';
-//import { IEvents } from '../base/events';
-
-interface IProductCardActions {
-	onClick: (event: MouseEvent) => void;
-}
-
-export interface IProductCard {
-	description: string;
-	image: string;
-	title: string;
-	category: string;
-	price: number;
-	button?: string;
-	status: boolean;
-}
+import { IProductCard, IProductCardActions, ItemProductBasket } from '../../types';
 
 export class ProductCard extends Component<IProductCard> {
 	protected _description?: HTMLParagraphElement;
@@ -120,11 +104,16 @@ export class ProductCard extends Component<IProductCard> {
 	set button(value: string) {
 		this.setText(this._button, value);
 	}
-}
 
-export interface ItemProductBasket {
-	title: string;
-	price: number;
+	setDisabledNonPriceButton(state: boolean) {
+		if (this._button) {
+			if (state) {
+				this._button.setAttribute('disabled', 'disabled'); 
+			} else {
+				this._button.removeAttribute('disabled');
+			}
+		}
+	}
 }
 
 export class BasketProduct extends Component<ItemProductBasket> {

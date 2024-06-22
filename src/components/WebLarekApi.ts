@@ -3,14 +3,8 @@ import {
 	IProductItem,
 	TOrderData,
 	IOrderSuccess,
+	IWebLarekApi,
 } from '../types';
-
-// Интерфейс для работы с API, с помощью которого мы получаем список товаров, товар и можем оформлять заказ
-export interface IWebLarekApi {
-	getProductList: () => Promise<IProductItem[]>;
-	getProductItem: (id: string) => Promise<IProductItem>;
-	orderProduct:(order: TOrderData) => Promise<IOrderSuccess>;
-}
 
 export class WebLarekApi extends Api implements IWebLarekApi {
 	readonly cdn: string;

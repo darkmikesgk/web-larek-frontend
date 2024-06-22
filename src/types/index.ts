@@ -6,28 +6,16 @@ export interface IProductItem {
 	title: string;
 	category: string;
 	price: number | null;
-	//status: boolean;
 }
 
-//Интерфейс для предварительного просмотра карточки
-export interface IPreviewProduct extends IProductItem {
-	valid: boolean;
-	state: boolean;
+export interface IBasketView {
+	items: HTMLElement[];
+	total: number;
 }
 
-// //Интерфейс для каталога карточек
-// export interface IProductList {
-// 	total: number;
-// 	items: IProductItem[];
-// 	getProductItem(id: string): void;
-// 	getProductList(items: IProductItem[]): void;
-// }
-
-//Интерфейс для продукта в корзине
-// export interface IBasketProduct
-// 	extends Omit<IProductItem, 'description' | 'image' | 'category'> {
-// 	index?: number;
-// }
+export interface IModalData {
+	content: HTMLElement;
+}
 
 //Интерфейс для информации о доставке
 export interface IDelivery {
@@ -47,18 +35,34 @@ export interface IOrderList {
 	items: string[];
 }
 
-//Интерфейс построения заказа
-// export interface IOrderBuilder {
-// 	delivery: IDelivery;
-// 	contacts: IBuyerContacts;
-// 	orderList: IOrderList;
-// 	result: TOrderData;
-// }
-
 // Интерфейс успешного заказа
 export interface IOrderSuccess {
-//	id: string;
 	total: number;
+}
+
+export interface IProductCardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+export interface IProductCard {
+	description: string;
+	image: string;
+	title: string;
+	category: string;
+	price: number;
+	button?: string;
+	status: boolean;
+}
+
+export interface ItemProductBasket {
+	title: string;
+	price: number;
+}
+
+export interface IPage {
+	counter: number;
+	catalog: HTMLElement[];
+	locked: boolean;
 }
 
 // Интерфейс для состояния формы
@@ -78,20 +82,23 @@ export interface IInputData {
 	value: string;
 }
 
-// // Интерфейс для работы с API, с помощью которого мы получаем список товаров, товар и можем оформлять заказ
-// export interface IWebLarekApi {
-// 	getProductList: () => Promise<IProductItem[]>;
-// 	getProductItem: (id: string) => Promise<IProductItem>;
-// 	orderProduct:(order: IOrderData) => Promise<IOrderSuccess>;
-// }
-
 //тип данных бизнес логики
 export interface IAppState {
   catalog: IProductItem[];
   basket: string[];
   preview: string | null;
-  //order: IOrderBuilder | null;
   loading: boolean;
+}
+
+export interface ISuccessActions {
+	onClick: () => void;
+}
+
+// Интерфейс для работы с API, с помощью которого мы получаем список товаров, товар и можем оформлять заказ
+export interface IWebLarekApi {
+	getProductList: () => Promise<IProductItem[]>;
+	getProductItem: (id: string) => Promise<IProductItem>;
+	orderProduct:(order: TOrderData) => Promise<IOrderSuccess>;
 }
 
 //Тип для карточки каталога (исключая описание, через Omit)

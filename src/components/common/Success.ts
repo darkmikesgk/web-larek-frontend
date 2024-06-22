@@ -1,10 +1,6 @@
-import { IOrderSuccess } from '../../types';
+import { IOrderSuccess, ISuccessActions } from '../../types';
 import { ensureElement } from '../../utils/utils';
 import { Component } from '../base/Component';
-
-interface ISuccessActions {
-	onClick: () => void;
-}
 
 export class Success extends Component<IOrderSuccess> {
 	protected _total: HTMLParagraphElement;
