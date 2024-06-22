@@ -1,6 +1,10 @@
 import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
-import { IProductCard, IProductCardActions, ItemProductBasket } from '../../types';
+import {
+	IProductCard,
+	IProductCardActions,
+	ItemProductBasket,
+} from '../../types';
 
 export class ProductCard extends Component<IProductCard> {
 	protected _description?: HTMLParagraphElement;
@@ -12,9 +16,9 @@ export class ProductCard extends Component<IProductCard> {
 
 	private categoryItem: Record<string, string> = {
 		'софт-скил': '_soft',
-		'другое': '_other',
-		'дополнительное': '_additional',
-		'кнопка': '_button',
+		другое: '_other',
+		дополнительное: '_additional',
+		кнопка: '_button',
 		'хард-скилл': '_hard',
 	};
 
@@ -24,31 +28,37 @@ export class ProductCard extends Component<IProductCard> {
 		actions: IProductCardActions
 	) {
 		super(container);
+		this.initElements(container);
+		this.initEventListeners(actions);
+	}
 
-		this._description = container.querySelector(`.${blockName}__text`);
+	private initElements(container: HTMLElement): void {
+		this._description = container.querySelector(`.${this.blockName}__text`);
 		this._image = ensureElement<HTMLImageElement>(
-			`.${blockName}__image`,
+			`.${this.blockName}__image`,
 			container
 		);
 		this._title = ensureElement<HTMLHeadingElement>(
-			`.${blockName}__title`,
+			`.${this.blockName}__title`,
 			container
 		);
 		this._category = ensureElement<HTMLSpanElement>(
-			`.${blockName}__category`,
+			`.${this.blockName}__category`,
 			container
 		);
 		this._price = ensureElement<HTMLSpanElement>(
-			`.${blockName}__price`,
+			`.${this.blockName}__price`,
 			container
 		);
-		this._button = container.querySelector(`.${blockName}__button`);
+		this._button = container.querySelector(`.${this.blockName}__button`);
+	}
 
+	private initEventListeners(actions: IProductCardActions): void {
 		if (actions?.onClick) {
 			if (this._button) {
 				this._button.addEventListener('click', actions.onClick);
 			} else {
-				container.addEventListener('click', actions.onClick);
+				this.container.addEventListener('click', actions.onClick);
 			}
 		}
 	}
@@ -85,8 +95,7 @@ export class ProductCard extends Component<IProductCard> {
 		this.setText(this._category, value);
 	}
 
-	//проверить
-	protected toggleCategory(value: string) {
+	protected toggleCategory(value: string): void {
 		if (value in this.categoryItem) {
 			const changeClass = this.categoryItem[value];
 			this.toggleClass(this._category, changeClass, true);
@@ -108,7 +117,7 @@ export class ProductCard extends Component<IProductCard> {
 	setDisabledNonPriceButton(state: boolean) {
 		if (this._button) {
 			if (state) {
-				this._button.setAttribute('disabled', 'disabled'); 
+				this._button.setAttribute('disabled', 'disabled');
 			} else {
 				this._button.removeAttribute('disabled');
 			}
@@ -125,38 +134,36 @@ export class BasketProduct extends Component<ItemProductBasket> {
 	constructor(
 		container: HTMLElement,
 		index: number,
-		actions?: IProductCardActions
+		private actions?: IProductCardActions
 	) {
 		super(container);
 
-		this._title = ensureElement<HTMLHeadingElement>(
-			`.card__title`,
-			container
-		);
+		this._title = ensureElement<HTMLHeadingElement>(`.card__title`, container);
 		this._price = ensureElement<HTMLSpanElement>(`.card__price`, container);
 		this._index = ensureElement<HTMLSpanElement>(
 			`.basket__item-index`,
 			container
 		);
-		this.setText(this._index, index + 1);
+		this.index = index;
 		this._deleteButton = container.querySelector('.card__button');
-		this._deleteButton.addEventListener('click', (event: MouseEvent) => {
-			event.preventDefault();
-			actions.onClick?.(event);
-			return false;
-		});
+		this._deleteButton.addEventListener('click', this.handleDeleteClick);
 	}
 
+	handleDeleteClick = (evt: MouseEvent) => {
+		evt.preventDefault();
+		this.actions.onClick?.(evt);
+	};
+
 	set title(value: string) {
-		this.setText(this._title, value);
+		this._title.textContent = value;
 	}
 
 	set price(value: number) {
-		this.setText(this._price, value ? `${value} синапсов` : 'Бесценно');
+		this._price.textContent = value ? `${value} синапсов` : 'Бесценно';
 	}
 
 	set index(value: number) {
-		this.setText(this._index, value + 1);
+		this._index.textContent = (value + 1).toString();
 	}
 
 	render(data: ItemProductBasket): HTMLElement {

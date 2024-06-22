@@ -12,12 +12,12 @@ export class Modal extends Component<IModalData> {
 		super(conteiner);
 
 		this.events = events;
-		this._closeButton = ensureElement<HTMLButtonElement>(
-			'.modal__close',
-			conteiner
-		);
+		this._closeButton = ensureElement<HTMLButtonElement>('.modal__close',	conteiner);
 		this._content = ensureElement<HTMLDivElement>('.modal__content', conteiner);
+		this.initEventListeners();
+	}
 
+	private initEventListeners(): void {
 		this.container.addEventListener('click', this.close.bind(this));
 		this._closeButton.addEventListener('click', this.close.bind(this));
 		this._content.addEventListener('click', (evt) => evt.stopPropagation());
@@ -27,12 +27,12 @@ export class Modal extends Component<IModalData> {
 		this._content.replaceChildren(value);
 	}
 
-	open() {
+	open():void {
 		this.container.classList.add('modal_active');
 		this.events.emit('modal:isOpen');
 	}
 
-	close() {
+	close():void {
 		this.container.classList.remove('modal_active');
 		this.content = null;
 		this.events.emit('modal:isClosed');

@@ -1,4 +1,4 @@
-//Интерфейс для продукта
+//Описание продукта
 export interface IProductItem {
 	id: string;
 	description: string;
@@ -8,22 +8,24 @@ export interface IProductItem {
 	price: number | null;
 }
 
+//Описание представления корзины
 export interface IBasketView {
 	items: HTMLElement[];
 	total: number;
 }
 
+//Описание данных модального окна
 export interface IModalData {
 	content: HTMLElement;
 }
 
-//Интерфейс для информации о доставке
+//Описание информации о доставке
 export interface IDelivery {
 	payment: TPaymentMethod;
 	address: string;
 }
 
-//Интерфейс для контактных данных
+//Описание контактных данных покупателя
 export interface IBuyerContacts {
 	email: string;
 	phone: string;
@@ -35,15 +37,17 @@ export interface IOrderList {
 	items: string[];
 }
 
-// Интерфейс успешного заказа
+//Описание успешного заказа
 export interface IOrderSuccess {
 	total: number;
 }
 
+//Описание действия для карточки продукта
 export interface IProductCardActions {
 	onClick: (event: MouseEvent) => void;
 }
 
+//Описание карточки продукта
 export interface IProductCard {
 	description: string;
 	image: string;
@@ -54,11 +58,13 @@ export interface IProductCard {
 	status: boolean;
 }
 
+//Описание элемента корзины
 export interface ItemProductBasket {
 	title: string;
 	price: number;
 }
 
+//Описание страницы
 export interface IPage {
 	counter: number;
 	catalog: HTMLElement[];
@@ -82,7 +88,7 @@ export interface IInputData {
 	value: string;
 }
 
-//тип данных бизнес логики
+//Описание состояния приложения
 export interface IAppState {
   catalog: IProductItem[];
   basket: string[];
@@ -90,6 +96,7 @@ export interface IAppState {
   loading: boolean;
 }
 
+//Описание действий при успешном заказе
 export interface ISuccessActions {
 	onClick: () => void;
 }
@@ -101,7 +108,7 @@ export interface IWebLarekApi {
 	orderProduct:(order: TOrderData) => Promise<IOrderSuccess>;
 }
 
-//Тип для карточки каталога (исключая описание, через Omit)
+//Тип для карточки каталога (исключая описание)
 export type TProductCard = Omit<IProductItem, 'description'>;
 
 //Тип оплаты

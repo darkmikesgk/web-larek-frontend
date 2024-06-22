@@ -7,7 +7,7 @@ export class DeliveryForm extends Form<IDelivery> {
 	protected _paymentButtons: HTMLDivElement;
 	protected _online: HTMLButtonElement;
 	protected _uponReceipt: HTMLButtonElement;
-  protected _address: HTMLInputElement;
+	protected _address: HTMLInputElement;
 	protected events: IEvents;
 
 	constructor(container: HTMLFormElement, events: IEvents) {
@@ -21,14 +21,20 @@ export class DeliveryForm extends Form<IDelivery> {
 			'.button_alt',
 			container
 		);
-		this._paymentButtons.addEventListener('click', (evt: MouseEvent) => {
-			const target = evt.target as HTMLButtonElement;
-			if (target && target.classList.contains('button_alt')) {
-				this.setPaymentMethodClass(target.name);
-				events.emit('payment:isChanged', { target: target.name });
-			}
-		});
+
+		this._paymentButtons.addEventListener(
+			'click',
+			this.handlePaymentButtonClick
+		);
 	}
+
+	private handlePaymentButtonClick = (evt: MouseEvent) => {
+		const target = evt.target as HTMLButtonElement;
+		if (target && target.classList.contains('button_alt')) {
+			this.setPaymentMethodClass(target.name);
+			this.events.emit('payment:isChanged', { target: target.name });
+		}
+	};
 
 	setPaymentMethodClass(className: string): void {
 		[this._online, this._uponReceipt].forEach((btn) => {
@@ -36,41 +42,45 @@ export class DeliveryForm extends Form<IDelivery> {
 		});
 	}
 
-  //проверить
-  get address() {
-    return this.container.address.value;
-  }
+	get address() {
+		return this.container.address.value;
+	}
 
-  //проверить
 	set address(value: string) {
 		this.container.address.value = value;
 	}
 }
 
 export class BuyerContactsForm extends Form<IBuyerContacts> {
-  protected _emailInput: HTMLInputElement;
-  protected _phoneInput: HTMLInputElement;
+	protected _emailInput: HTMLInputElement;
+	protected _phoneInput: HTMLInputElement;
 
-  constructor(container: HTMLFormElement, events: IEvents) {
-    super(container, events);
+	constructor(container: HTMLFormElement, events: IEvents) {
+		super(container, events);
 
-    this._emailInput = this.container.elements.namedItem('email') as HTMLInputElement;
-    this._emailInput = this.container.elements.namedItem('phone') as HTMLInputElement;
-  }
+		this._emailInput = ensureElement<HTMLInputElement>(
+			'input[name="email"]',
+			container
+		);
+		this._phoneInput = ensureElement<HTMLInputElement>(
+			'input[name="phone"]',
+			container
+		);
+	}
 
-  get email() {
-    return this.container.email.value;
-  }
+	get email(): string {
+		return this._emailInput.value;
+	}
 
-  set email(value: string) {
-    this.container.email.value = value;
-  }
+	set email(value: string) {
+		this._emailInput.value = value;
+	}
 
-  get phone() {
-    return this.container.phone.value;
-  }
+	get phone() {
+		return this._phoneInput.value;
+	}
 
-  set phone(value: string) {
-    this.container.phone.value = value;
-  }
+	set phone(value: string) {
+		this._phoneInput.value = value;
+	}
 }

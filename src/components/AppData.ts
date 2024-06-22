@@ -1,3 +1,4 @@
+import { Model } from './base/Model';
 import {
 	FormErrors,
 	IAppState,
@@ -6,8 +7,11 @@ import {
 	IProductItem,
 	TPaymentMethod,
 } from '../types';
-import { Model } from './base/Model';
 import { IEvents } from './base/events';
+
+export type CatalogChangesEvents = {
+	catalog: Product[];
+};
 
 export class Product extends Model<IProductItem> implements IProductItem {
 	id: string;
@@ -19,25 +23,19 @@ export class Product extends Model<IProductItem> implements IProductItem {
 	status: boolean;
 }
 
-export type CatalogChangesEvents = {
-	catalog: Product[];
-};
-
 export class AppState extends Model<IAppState> {
-	catalog: IProductItem[];
-	basket: IProductItem[];
-	preview: string | null;
+	catalog: IProductItem[] = [];
+	basket: IProductItem[] = [];
+	preview: string | null = null;
 	order: TOrderData;
-	loading: boolean;
+	loading: boolean = false;
 	formErrors: FormErrors = {};
 
 	constructor(data: Partial<IAppState>, protected events: IEvents) {
 		super(data, events);
 		this.resetOrder();
-		this.basket = [];
 	}
 
-	//Сброс заказов в начальное состояние
 	resetOrder(): void {
 		this.order = {
 			payment: null,
@@ -49,13 +47,11 @@ export class AppState extends Model<IAppState> {
 		};
 	}
 
-	//Добавить товар
 	addProduct(item: IProductItem): void {
 		this.basket.push(item);
 		this.emitChanges('basket:isChanged');
 	}
 
-	//Удалить товар
 	deleteProduct(id: string): void {
 		this.basket = this.basket.filter((item) => item.id !== id);
 		this.emitChanges('basket:isChanged');
@@ -71,14 +67,13 @@ export class AppState extends Model<IAppState> {
 		this.validateDelivery();
 	}
 
-	//перепроверить
-	setContactField(field: keyof Partial<IBuyerContacts>, value: string): void {
+	setContactField(field: keyof IBuyerContacts, value: string): void {
 		this.order[field] = value;
 		this.validateBuyerContacts();
 	}
 
 	setCatalog(items: IProductItem[]): void {
-		this.catalog = items.map((item) => new Product(item, this.events));
+		this.catalog = items.map(item => new Product(item, this.events));
 		this.emitChanges('catalog:isChanged', { catalog: this.catalog });
 	}
 
@@ -90,7 +85,6 @@ export class AppState extends Model<IAppState> {
 		return this.basket.includes(item);
 	}
 
-	//Очистить корзину
 	clearBasket(): void {
 		this.basket = [];
 		this.resetOrder();
@@ -98,7 +92,7 @@ export class AppState extends Model<IAppState> {
 	}
 
 	getTotal(): number {
-		return this.basket.reduce((total, item) => total + item.price, 0);
+		return this.basket.reduce((total, item) => total + (item.price ?? 0), 0);
 	}
 
 	orderSuccess(): void {
@@ -107,7 +101,7 @@ export class AppState extends Model<IAppState> {
 	}
 
 	validateDelivery(): void {
-		const errors: typeof this.formErrors = {};
+		const errors: FormErrors = {};
 
 		if (!this.order.payment) {
 			errors.payment = 'Укажите способ оплаты';
@@ -120,7 +114,7 @@ export class AppState extends Model<IAppState> {
 	}
 
 	validateBuyerContacts(): void {
-		const errors: typeof this.formErrors = {};
+		const errors: FormErrors = {};
 
 		if (!this.order.email) {
 			errors.email = 'Укажите email';

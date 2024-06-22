@@ -6,7 +6,7 @@ export class Success extends Component<IOrderSuccess> {
 	protected _total: HTMLParagraphElement;
 	protected _closeButton: HTMLButtonElement;
 
-	constructor(container: HTMLElement, _total: number, actions: ISuccessActions) {
+	constructor(container: HTMLElement, _total: number, private actions: ISuccessActions) {
 		super(container);
 
 		this._total = ensureElement<HTMLParagraphElement>(
@@ -18,11 +18,11 @@ export class Success extends Component<IOrderSuccess> {
 			'.order-success__close',
 			container
 		);
-		if (actions.onClick) {
-			this._closeButton.addEventListener('click', actions.onClick);
-		}
+		this._closeButton.addEventListener('click', this.handleCloseClick);
 	}
 
+	private handleCloseClick = () => this.actions.onClick?.();
+	
   set totalPrice(value: number) {
     this.setText(this._total, `Списано ${value} синапсов`);
   }

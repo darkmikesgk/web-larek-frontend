@@ -3,11 +3,6 @@ import { createElement, ensureElement } from '../../utils/utils';
 import { Component } from '../base/Component';
 import { IEvents } from '../base/events';
 
-// interface IBasketView {
-// 	items: HTMLElement[];
-// 	total: number;
-// }
-
 export class Basket extends Component<IBasketView> {
 	protected _list: HTMLElement;
 	protected _total: HTMLElement;
@@ -21,25 +16,39 @@ export class Basket extends Component<IBasketView> {
 		this._list = ensureElement<HTMLElement>('.basket__list', container);
 		this._total = this.container.querySelector('.basket__price');
 		this._button = this.container.querySelector('.basket__button');
-		this._button.addEventListener('click', () => this.events.emit('delivery:isOpen'));
+		this._button.addEventListener('click', () =>
+			this.events.emit('delivery:isOpen')
+		);
 		this.items = [];
+	}
+
+	private updateList(items: HTMLElement[]) {
+		this._list.replaceChildren(...items);
+	}
+
+	private showEmptyMessage() {
+		const emptyMessage = createElement<HTMLParagraphElement>('p', {
+			textContent: 'Корзина пуста',
+		});
+
+		this._list.replaceChildren(emptyMessage);
+	}
+
+	private setButtonState(isDisabled: boolean) {
+		this.setDisabled(this._button, isDisabled);
 	}
 
 	set items(items: HTMLElement[]) {
 		if (items.length) {
-			this._list.replaceChildren(...items);
-			this.setDisabled(this._button, false);
+			this.updateList(items);
+			this.setButtonState(false);
 		} else {
-			this._list.replaceChildren(
-				createElement<HTMLParagraphElement>('p', {
-					textContent: 'Корзина пуста',
-				})
-			);
-			this.setDisabled(this._button, true);
+			this.showEmptyMessage();
+			this.setButtonState(true);
 		}
 	}
 
-  set total(total: number) {
-    this.setText(this._total, `${total} синапсов`);
-  }
+	set total(total: number) {
+		this.setText(this._total, `${total} синапсов`);
+	}
 }
