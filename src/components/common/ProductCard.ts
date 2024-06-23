@@ -1,9 +1,9 @@
 import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
 import {
+	IItemProductBasket,
 	IProductCard,
 	IProductCardActions,
-	ItemProductBasket,
 } from '../../types';
 
 export class ProductCard extends Component<IProductCard> {
@@ -125,7 +125,7 @@ export class ProductCard extends Component<IProductCard> {
 	}
 }
 
-export class BasketProduct extends Component<ItemProductBasket> {
+export class BasketProduct extends Component<IItemProductBasket> {
 	protected _title: HTMLHeadingElement;
 	protected _price: HTMLSpanElement;
 	protected _index: HTMLSpanElement;
@@ -166,7 +166,7 @@ export class BasketProduct extends Component<ItemProductBasket> {
 		this._index.textContent = (value + 1).toString();
 	}
 
-	render(data: ItemProductBasket): HTMLElement {
+	render(data: IItemProductBasket): HTMLElement {
 		Object.assign(this as object, data ?? {});
 		return this.container;
 	}

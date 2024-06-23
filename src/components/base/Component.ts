@@ -2,25 +2,25 @@
 export abstract class Component<T> {
 	protected constructor(protected readonly container: HTMLElement) {}
 
-//Вернуть корневой DOM-элемент
+	//Вернуть корневой DOM-элемент
 	render(data?: Partial<T>): HTMLElement {
 		Object.assign(this as object, data ?? {});
 		return this.container;
 	}
 
-//Переключение класса
+	//Переключение класса
 	toggleClass(element: HTMLElement, className: string, force?: boolean) {
 		element.classList.toggle(className, force);
 	}
 
-//Установка текстового содержимого
+	//Установка текстового содержимого
 	protected setText(element: HTMLElement, value: unknown) {
 		if (element) {
 			element.textContent = String(value);
 		}
 	}
-  
-//Изменить статус блокировки
+
+	//Изменить статус блокировки
 	setDisabled(element: HTMLElement, state: boolean) {
 		if (element) {
 			if (state) {
@@ -31,7 +31,7 @@ export abstract class Component<T> {
 		}
 	}
 
-//Альтернативный текст к картинке
+	//Альтернативный текст к картинке
 	protected setImage(element: HTMLImageElement, src: string, alt?: string) {
 		if (element) {
 			element.src = src;

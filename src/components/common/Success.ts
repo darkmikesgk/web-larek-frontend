@@ -6,7 +6,11 @@ export class Success extends Component<IOrderSuccess> {
 	protected _total: HTMLParagraphElement;
 	protected _closeButton: HTMLButtonElement;
 
-	constructor(container: HTMLElement, _total: number, private actions: ISuccessActions) {
+	constructor(
+		container: HTMLElement,
+		_total: number,
+		private actions: ISuccessActions
+	) {
 		super(container);
 
 		this._total = ensureElement<HTMLParagraphElement>(
@@ -22,8 +26,8 @@ export class Success extends Component<IOrderSuccess> {
 	}
 
 	private handleCloseClick = () => this.actions.onClick?.();
-	
-  set totalPrice(value: number) {
-    this.setText(this._total, `Списано ${value} синапсов`);
-  }
+
+	set totalPrice(value: number) {
+		this.setText(this._total, `Списано ${value} синапсов`);
+	}
 }

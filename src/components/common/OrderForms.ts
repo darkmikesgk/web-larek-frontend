@@ -1,7 +1,7 @@
-import { IBuyerContacts, IDelivery } from '../types';
-import { ensureAllElements, ensureElement } from '../utils/utils';
-import { IEvents } from './base/events';
-import { Form } from './common/Form';
+import { IBuyerContacts, IDelivery } from '../../types';
+import { ensureAllElements, ensureElement } from '../../utils/utils';
+import { IEvents } from '../base/events';
+import { Form } from './Form';
 
 export class DeliveryForm extends Form<IDelivery> {
 	protected _paymentButtons: HTMLDivElement;

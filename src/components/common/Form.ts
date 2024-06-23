@@ -62,17 +62,3 @@ export class Form<T> extends Component<IFormState> {
 		return this.container;
 	}
 }
-// 		this.container.addEventListener('input', (evt: Event) => {
-// 			const target = evt.target as HTMLInputElement;
-// 			const field = target.name as keyof T;
-// 			const value = target.value;
-// 			this.onInputChange(field, value);
-// 		});
-
-// 		this.container.addEventListener('submit', (evt: Event) => {
-// 			evt.preventDefault();
-// 			this.events.emit(`${this.container.name}:isSubmit`);
-// 		});
-// 	}
-
-

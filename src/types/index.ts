@@ -59,7 +59,7 @@ export interface IProductCard {
 }
 
 //Описание элемента корзины
-export interface ItemProductBasket {
+export interface IItemProductBasket {
 	title: string;
 	price: number;
 }
@@ -90,10 +90,10 @@ export interface IInputData {
 
 //Описание состояния приложения
 export interface IAppState {
-  catalog: IProductItem[];
-  basket: string[];
-  preview: string | null;
-  loading: boolean;
+	catalog: IProductItem[];
+	basket: string[];
+	preview: string | null;
+	loading: boolean;
 }
 
 //Описание действий при успешном заказе
@@ -105,7 +105,7 @@ export interface ISuccessActions {
 export interface IWebLarekApi {
 	getProductList: () => Promise<IProductItem[]>;
 	getProductItem: (id: string) => Promise<IProductItem>;
-	orderProduct:(order: TOrderData) => Promise<IOrderSuccess>;
+	orderProduct: (order: TOrderData) => Promise<IOrderSuccess>;
 }
 
 //Тип для карточки каталога (исключая описание)
